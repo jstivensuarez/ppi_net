@@ -1,0 +1,179 @@
+﻿@model Modelo.Dto.AcudienteDto
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Crear</h2>
+
+@using (Html.BeginForm("Create", "Acudientes", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Acudiente</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.Documento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.Documento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.Documento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.PrimerApellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.PrimerApellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.PrimerApellido, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.SegundoApellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.SegundoApellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.SegundoApellido, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.Correo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.Correo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.Correo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.Telefono, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.Direccion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Acudiente.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Acudiente.Direccion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Acudiente.TipoDocumentoId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("TipoDocumentoId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Acudiente.TipoDocumentoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" class="btn btn-primary" value="Agregar Alumno" onclick="agregarAlumno()" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Crear" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Regresar", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<h2>Relaciones</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Alumno.Documento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Alumno.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Alumno.PrimerApellido)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Alumno.SegundoApellido)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Relaciones)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alumno.Documento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alumno.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alumno.PrimerApellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alumno.SegundoApellido)
+            </td>
+            <td>
+                @Html.ActionLink("Eliminar", "DeleteAlumno", new { id = item.Alumno.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+<script>
+    function agregarAlumno() {
+        debugger;
+        var url = "/Acudientes/AddNewAlumno";
+        var Documento = $('#Acudiente_Documento').val();
+        var Nombre = $('#Acudiente_Nombre').val();
+        var PrimerApellido = $('#Acudiente_PrimerApellido').val();
+        var SegundoApellido = $('#Acudiente_SegundoApellido').val();
+        var Correo = $('#Acudiente_Correo').val();
+        var Telefono = $('#Acudiente_Telefono').val();
+        var Direccion = $('#Acudiente_Direccion').val();
+        var TipoDocumentoId = $('#TipoDocumentoId').val();
+        var acudiente = {
+            Documento: Documento,
+            Nombre: Nombre, PrimerApellido: PrimerApellido,
+            SegundoApellido: SegundoApellido,
+            Correo: Correo,
+            Telefono: Telefono,
+            Direccion: Direccion,
+            TipoDocumentoId: TipoDocumentoId
+        }
+        $.ajax({
+            url: url,
+            data: { acudiente: acudiente },
+            type: 'POST',
+            dataType: 'json',
+            async : false,
+            success: function (json) {
+                window.location.href = '@Url.Action("AddAlumno","Acudientes")';
+            },
+            error: function (json) {
+               
+            }
+        });
+    }
+</script>
+
+
+
+

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Modelo.Modelos.Examen>
+@{
+    ViewBag.Title = "Home Page";
+    List<Modelo.Modelos.Examen> examanes = ViewBag.examenes;
+    List<Modelo.Modelos.Examen> exPendientes = examanes.Where(ex => ex.Calificado == false).ToList();
+    List<Modelo.Modelos.Examen> exCalificados = examanes.Where(ex => ex.Calificado == true).ToList();
+}
+
+
+<div class="container">
+    <h2>Examenes</h2>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">Examenes del día</a></li>
+        <li><a data-toggle="tab" href="#menu1">Examenes pendientes</a></li>
+        <li><a data-toggle="tab" href="#menu2">Examenes terminados</a></li>
+    </ul>
+    <div  class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <h3>Exámenes del día</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        Descripción
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descripcion)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Calificar", "Calificar", "Examen", new { id = item.Id }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+        </div>
+        <div id="menu1" class="fade tab-pane">
+            <h3>Exámenes pendientes</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        Descripción
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in exPendientes)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descripcion)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Calificar", "Calificar", "Examen", new { id = item.Id }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+        <div id="menu2" class="fade tab-pane">
+            <h3>Exámenes calificados</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        Descripción
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in exCalificados)
+            {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descripcion)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Detalles", "Details", "Examen", new { id = item.Id }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+        @*<img src="~/Content/Img/karate.jpg" width="80%" height="80%" />*@
+    </div>
+</div>

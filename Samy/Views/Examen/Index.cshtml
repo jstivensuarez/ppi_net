@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Modelo.Dto.ExamenDto>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Examenes</h2>
+
+
+<p>
+    @Html.ActionLink("Crear", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Descripción
+        </th>
+        <th>
+            Fecha del examen
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaExamen)
+            </td>
+            <td>
+                @if (!item.terminado)
+                {
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })@:|
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) @:|
+                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                }
+                else
+                {
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning", @disabled = "disabled" })@:|
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) @:|
+                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger", @disabled = "disabled" })
+                }
+
+
+            </td>
+        </tr>
+    }
+
+</table>

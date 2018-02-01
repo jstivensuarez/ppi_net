@@ -1,0 +1,60 @@
+﻿@model Modelo.Dto.ExamenDto
+
+<div class="jumbotron text-center">
+    <h3>Alumnos por calificar</h3>
+</div>
+<hr />
+@using (Html.BeginForm("Calificar", "Examen", FormMethod.Post))
+{
+    @Html.HiddenFor(model=> model.Id)
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Alumno.TipoDocumento.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alumno.Documento)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Alumno.Categoria.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alumno.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alumno.Nota)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Alumnos)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoDocumento.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Documento)
+                </td>      
+                <td>
+                    @Html.DisplayFor(modelItem => item.Categoria.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nota)
+                </td>
+                <td>
+                    @Html.ActionLink("Calificar", "CalificarAlumno", new { id = item.Id,e=Model.Id }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Terminar" class="btn btn-default" />
+        </div>
+    </div>
+}

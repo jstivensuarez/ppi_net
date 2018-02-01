@@ -1,0 +1,42 @@
+﻿@model Modelo.Dto.ExamenDto
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Pregunta.Descripcion)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Preguntas)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+        </tr>
+    }
+  
+</table>
+@using (Html.BeginForm("CalificarPregunta", "Examen", FormMethod.Get))
+{
+    <div class="form-group">
+        <label for="sel1">Nota</label>
+        <select class="form-control" id="nota" name="nota">
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+        </select>
+    </div>
+    @*<input name="nota" value="@Model.Alumno.Nota" type="text" />*@
+    <input type="submit" value="Calificar" class="btn btn-info" />
+}

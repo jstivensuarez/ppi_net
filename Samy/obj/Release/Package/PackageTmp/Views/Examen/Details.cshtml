@@ -1,0 +1,121 @@
+﻿@model Modelo.Dto.ExamenDto
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Detalles</h2>
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Examen</a></li>
+    <li><a data-toggle="tab" href="#menu1">Alumnos</a></li>
+    <li><a data-toggle="tab" href="#menu2">Usuarios</a></li>
+    <li><a data-toggle="tab" href="#menu3">Preguntas</a></li>
+</ul>
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+        <h4>Examen</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descripcion)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.FechaExamen)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FechaExamen)
+            </dd>
+        </dl>
+
+    </div>
+    <div id="menu1" class="tab-pane fade">
+        <h4>Alumnos</h4>
+        <div class="tab-pane">
+            <table class="table">
+                <tr>
+                    <th>
+                        Documento
+                    </th>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Nota
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.Alumnos)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Documento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nota)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+
+    <div id="menu2" class="tab-pane fade">
+        <h4>Usuarios</h4>
+        <div class="tab-pane">
+            <table class="table">
+                <tr>
+                    <td>
+                        Nombre
+                    </td>
+                    <td>
+                        Correo
+                    </td>
+                </tr>
+                @foreach (var item in Model.Usuarios)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Correo)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+    <div id="menu3" class="tab-pane fade">
+        <h4>Preguntas</h4>
+        <div class="tab-pane">
+            <table class="table">
+                @foreach (var item in Model.Preguntas)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descripcion)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<p>
+    @if (!Model.terminado)
+    {
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Id })
+    }
+    @Html.ActionLink("Regresar", "Index")
+</p>
+

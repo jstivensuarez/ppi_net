@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samy", "Samy\Samy.csproj", "{630F60F9-752C-448E-88FB-636690B26420}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modelo", "Modelo\Modelo.csproj", "{30E23F5C-F934-4416-AE16-5DEE6A384457}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{630F60F9-752C-448E-88FB-636690B26420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630F60F9-752C-448E-88FB-636690B26420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630F60F9-752C-448E-88FB-636690B26420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630F60F9-752C-448E-88FB-636690B26420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30E23F5C-F934-4416-AE16-5DEE6A384457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E23F5C-F934-4416-AE16-5DEE6A384457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E23F5C-F934-4416-AE16-5DEE6A384457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E23F5C-F934-4416-AE16-5DEE6A384457}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://stivensuarez11111.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Modelo\\Modelo.csproj
+		SccProjectName1 = Modelo
+		SccLocalPath1 = Modelo
+		SccProjectUniqueName2 = Samy\\Samy.csproj
+		SccProjectName2 = Samy
+		SccLocalPath2 = Samy
+	EndGlobalSection
+EndGlobal
