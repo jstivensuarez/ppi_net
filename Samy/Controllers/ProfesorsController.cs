@@ -97,7 +97,7 @@ namespace Samy.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit( Profesor profesor)
+        public ActionResult Edit(Profesor profesor)
         {
             var lista = db.TipoDocumentos.ToList();
             lista.Add(new TipoDocumento { Id = 0, Descripcion = "[Seleccione el documento]" });
@@ -117,7 +117,7 @@ namespace Samy.Controllers
                 }
                 ViewBag.mensaje = "Este profesor ya existe";
             }
-          
+
             return View(profesor);
         }
 
@@ -154,6 +154,76 @@ namespace Samy.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [HttpGet]
+        public JsonResult ListarProfesores(string sidx, string sord, int page, int rows,
+            bool _search, string searchField, string searchOper, string searchString)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Profesor> profesores = new List<Profesor>();
+            if (sord.ToUpper() == "DESC")
+            {
+                profesores = db.Profesors.
+                      OrderByDescending(c => c.Nombre).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                profesores = db.Profesors.
+                     OrderBy(c => c.Nombre).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            if (_search)
+            {
+                switch (searchField)
+                {
+                    case "Nombre":
+                        profesores = profesores.Where(a => a.Nombre.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "Documento":
+                        profesores = profesores.Where(a => a.Documento.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "Correo":
+                        profesores = profesores.Where(a => a.Correo != null &&
+                         a.Correo.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "PrimerApellido":
+                        profesores = profesores.Where(a => a.PrimerApellido.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "SegundoApellido":
+                        profesores = profesores.Where(a => a.SegundoApellido != null &&
+                        a.SegundoApellido.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                }
+            }
+
+            int totalRecords = db.Profesors.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = profesores.Select(a => new
+                {
+                    a.Id,
+                    a.Nombre,
+                    a.Documento,
+                    a.PrimerApellido,
+                    a.SegundoApellido,
+                    Correo = a.Correo
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
         }
     }
 }

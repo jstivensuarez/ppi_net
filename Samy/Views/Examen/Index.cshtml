@@ -9,43 +9,72 @@
 <p>
     @Html.ActionLink("Crear", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            Descripción
-        </th>
-        <th>
-            Fecha del examen
-        </th>
-        <th></th>
-    </tr>
+<div>
+    <table id="grid"></table>
+    <div id="pager"></div>
+</div>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />
+<link href="~/Content/jqGrid-Botstrap.css" rel="stylesheet" />
+@section scripts {
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/i18n/grid.locale-es.js"></script>
+    <script src="~/Scripts/jquery.jqGrid.js"></script>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaExamen)
-            </td>
-            <td>
-                @if (!item.terminado)
-                {
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })@:|
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) @:|
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-                }
-                else
-                {
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning", @disabled = "disabled" })@:|
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) @:|
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger", @disabled = "disabled" })
-                }
+    <script>
+        $(function () {
+            debugger;
+            $("#grid").jqGrid({
+                url: "/Examen/ListarExamenes",
+                datatype: "json",
+                mtype: "Get",
+                colNames: ["Id", "Descripción", "Fecha", "Acción"],
+                colModel: [
+                    { key: true, hidden: true, name: "Id", index: "Id" },
+                    { key: false, name: "Descripcion", width: 500, index: "Descripcion", editable: false },
+                      { key: false, name: "FechaExamen",width: 200, index: "FechaExamen", editable: false, formatter: "date", formatoptions: {newformat:"d/m/y"}},
+                      { name: 'act', index: 'act', width: 500, sortable: false, search: false }
 
+                ],
+                pager: $("#pager"),
+                rowNum: 10,
+                rowList: [10, 15],
+                height: "100%",
+                viewrecords: true,
+                caption: "Examenes",
+                emptyrecords: "No hay examenes",
+                gridComplete: function () {
+                    var ids = jQuery("#grid").getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        var cl = ids[i];
+                        debugger;
+                        be = "<a class='btn btn-warning  btn-sm' href='/Examen/Edit/" + cl + "'>Editar</a> |";
+                        se = "<a class='btn btn-info  btn-sm' href='/Examen/Details/" + cl + "'>Detalles</a> |";
+                        ce = "<a class='btn btn-danger  btn-sm' href='/Examen/Delete/" + cl + "'>Eliminar</a>";
+                        jQuery("#grid").setRowData(ids[i], { act: be + se + ce })
+                    }
 
-            </td>
-        </tr>
-    }
-
-</table>
+                },
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    id: "0"
+                },
+                shrinkToFit: false,
+                autowidth: true,
+                multiselect: false
+            }).navGrid("#pager", {
+                edit: false, add: false, del: false, searchtext: "Buscar examenes"
+            },
+            {}, {}, {},
+            {
+                zIndex: 100,
+                caption: "Buscar examenes",
+                sopt: ['cn']
+            });;
+        });
+    </script>
+}

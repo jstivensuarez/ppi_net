@@ -346,5 +346,74 @@ namespace Samy.Controllers
             dto.Relaciones.Remove(dto.Relaciones.Where(r => r.AlumnoId == id).SingleOrDefault());
             return View("Edit", dto);
         }
+
+        [HttpGet]
+        public JsonResult ListarAcudientes(string sidx, string sord, int page, int rows,
+            bool _search, string searchField, string searchOper, string searchString)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Acudiente> acudientes = new List<Acudiente>();
+            if (sord.ToUpper() == "DESC")
+            {
+                acudientes = db.Acudientes.
+                      OrderByDescending(c => c.Nombre).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                acudientes = db.Acudientes.
+                     OrderBy(c => c.Nombre).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            if (_search)
+            {
+                switch (searchField)
+                {
+                    case "Nombre":
+                        acudientes = acudientes.Where(a => a.Nombre.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "Documento":
+                        acudientes = acudientes.Where(a => a.Documento.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "Correo":
+                        acudientes = acudientes.Where(a => a.Correo != null &&
+                         a.Correo.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "PrimerApellido":
+                        acudientes = acudientes.Where(a => a.PrimerApellido.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "SegundoApellido":
+                        acudientes = acudientes.Where(a => a.SegundoApellido != null &&
+                        a.SegundoApellido.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                }
+            }
+
+            int totalRecords = db.Acudientes.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = acudientes.Select(a => new
+                {
+                    Id = a.Id,
+                    Nombre = a.Nombre,
+                    Documento = a.Documento,
+                    Apellidos = a.PrimerApellido+ " "+a.SegundoApellido,
+                    Correo = a.Correo
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
     }
 }

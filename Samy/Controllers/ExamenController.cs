@@ -571,6 +571,92 @@ namespace Samy.Controllers
             }
         }
 
+        [HttpGet]
+        public JsonResult ListarExamenes(string sidx, string sord, int page, int rows)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            IEnumerable<ExamenDto> examenes = null;
+
+            if (sord.ToUpper() == "DESC")
+            {
+                examenes = (from ex in db.Examens
+                            select new ExamenDto
+                            {
+                                Alumnos = (from p in db.Alumnos
+                                           join h in db.ExamenAlumnos
+                                           on p.Id equals h.AlumnoId
+                                           where h.ExamenId == ex.Id
+                                           select p
+                                             ).ToList(),
+                                Usuarios = (from p in db.Usuarios
+                                            join h in db.ExamenUsuarios
+                                            on p.Id equals h.UsuarioId
+                                            where h.ExamenId == ex.Id
+                                            select p
+                                             ).ToList(),
+                                Preguntas = (from p in db.Preguntas
+                                             join h in db.ExamenPregunta
+                                             on p.Id equals h.PreguntaId
+                                             where h.ExamenId == ex.Id
+                                             select p
+                                             ).ToList(),
+                                Id = ex.Id,
+                                Descripcion = ex.Descripcion,
+                                FechaExamen = ex.FechaExamen,
+                                terminado = ex.Calificado
+                            }).OrderByDescending(e => e.Descripcion).ToList().Distinct();
+            }
+            else
+            {
+                examenes = (from ex in db.Examens
+                            select new ExamenDto
+                            {
+                                Alumnos = (from p in db.Alumnos
+                                           join h in db.ExamenAlumnos
+                                           on p.Id equals h.AlumnoId
+                                           where h.ExamenId == ex.Id
+                                           select p
+                                             ).ToList(),
+                                Usuarios = (from p in db.Usuarios
+                                            join h in db.ExamenUsuarios
+                                            on p.Id equals h.UsuarioId
+                                            where h.ExamenId == ex.Id
+                                            select p
+                                             ).ToList(),
+                                Preguntas = (from p in db.Preguntas
+                                             join h in db.ExamenPregunta
+                                             on p.Id equals h.PreguntaId
+                                             where h.ExamenId == ex.Id
+                                             select p
+                                             ).ToList(),
+                                Id = ex.Id,
+                                Descripcion = ex.Descripcion,
+                                FechaExamen = ex.FechaExamen,
+                                terminado = ex.Calificado
+                            }).OrderBy(e => e.Descripcion).ToList().Distinct();
+            }
+
+            int totalRecords = db.Examens.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = examenes.Select(e => new
+                {
+                    e.Id,
+                    e.Descripcion,
+                    e.FechaExamen
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

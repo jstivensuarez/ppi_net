@@ -3,3 +3,8 @@ C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\Mode
 C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\Modelo\obj\Debug\Modelo.dll
 C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\Modelo\obj\Debug\Modelo.pdb
 C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\Modelo\obj\Debug\Modelo.csprojResolveAssemblyReference.cache
+C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\bin\Debug\Modelo.dll
+C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\bin\Debug\Modelo.pdb
+C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\obj\Debug\Modelo.dll
+C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\obj\Debug\Modelo.pdb
+C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\obj\Debug\Modelo.csprojResolveAssemblyReference.cache

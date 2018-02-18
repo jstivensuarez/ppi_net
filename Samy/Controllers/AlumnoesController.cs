@@ -268,5 +268,76 @@ namespace Samy.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpGet]
+        public JsonResult ListarAlumnos(string sidx, string sord, int page, int rows,
+            bool _search, string searchField, string searchOper, string searchString)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Alumno> alumnos = new List<Alumno>();
+            if (sord.ToUpper() == "DESC")
+            {
+                alumnos = db.Alumnos.
+                      OrderByDescending(c => c.Nombre).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                alumnos = db.Alumnos.
+                     OrderBy(c => c.Nombre).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+
+            if (_search)
+            {
+                switch (searchField)
+                {
+                    case "Nombre":
+                        alumnos = alumnos.Where(a => a.Nombre.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "Documento":
+                        alumnos = alumnos.Where(a => a.Documento.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "Correo":
+                        alumnos = alumnos.Where(a => a.Correo != null &&
+                         a.Correo.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "PrimerApellido":
+                        alumnos = alumnos.Where(a => a.PrimerApellido.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                    case "SegundoApellido":
+                        alumnos = alumnos.Where(a => a.SegundoApellido != null &&
+                        a.SegundoApellido.ToLower().Contains(searchString.ToLower())).ToList();
+                        break;
+                }
+            }
+
+            int totalRecords = db.Alumnos.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = alumnos.Select(a => new
+                {
+                    a.Id,
+                    a.Nombre,
+                    a.Documento,
+                    a.PrimerApellido,
+                    a.SegundoApellido,
+                    a.Correo
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
     }
 }

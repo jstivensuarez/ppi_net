@@ -130,5 +130,45 @@ namespace Samy.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpGet]
+        public JsonResult ListarSedes(string sidx, string sord, int page, int rows)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Sede> sedes = new List<Sede>();
+            if (sord.ToUpper() == "DESC")
+            {
+                sedes = db.Sedes.
+                      OrderByDescending(c => c.Nombre).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                sedes = db.Sedes.
+                     OrderBy(c => c.Nombre).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            int totalRecords = db.Sedes.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = sedes.Select(s => new {
+                    Id= s.Id,
+                    Nombre= s.Nombre
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
     }
 }

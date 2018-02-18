@@ -9,55 +9,73 @@
 <p>
     @Html.ActionLink("Crear", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.TipoDocumento.Descripcion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Documento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrimerApellido)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SegundoApellido)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Correo)
-        </th>
-        <th></th>
-    </tr>
+<div>
+    <table id="grid"></table>
+    <div id="pager"></div>
+</div>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />
+<link href="~/Content/jqGrid-Botstrap.css" rel="stylesheet" />
+@section scripts {
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/i18n/grid.locale-es.js"></script>
+    <script src="~/Scripts/jquery.jqGrid.js"></script>
+    <script>
+        $(function () {
+            debugger;
+            $("#grid").jqGrid({
+                url: "/Acudientes/ListarAcudientes",
+                datatype: "json",
+                mtype: "Get",
+                colNames: ["Id", "Nombre", "Documento", "Primer apellido", "Segundo apellido", "Correo", "Acción"],
+                colModel: [
+                    { key: true, hidden: true, name: "Id", index: "Id" },
+                    { key: false, name: "Nombre", index: "Nombre", editable: false },
+                    { key: false, name: "Documento", index: "Documento", editable: false },
+                    { key: false, name: "PrimerApellido", index: "PrimerApellido", editable: false },
+                    { key: false, name: "SegundoApellido", index: "SegundoApellido", editable: false },
+                    { key: false, name: "Correo", index: "Correo", editable: false },
+                    { name: 'act', index: 'act', sortable: false, "width": 600, search: false }
+                ],
+                pager: $("#pager"),
+                rowNum: 10,
+                rowList: [10, 15],
+                height: "100%",
+                viewrecords: true,
+                caption: "Acudientes",
+                emptyrecords: "No hay acudientes",
+                gridComplete: function () {
+                    var ids = jQuery("#grid").getDataIDs();
+                    for (var i = 0; i < ids.length; i++) {
+                        var cl = ids[i];
+                        debugger;
+                        be = "<a class='btn btn-warning  btn-sm' href='/Acudientes/Edit/" + cl + "'>Editar</a> |";
+                        se = "<a class='btn btn-info  btn-sm' href='/Acudientes/Details/" + cl + "'>Detalles</a> |";
+                        ce = "<a class='btn btn-danger  btn-sm' href='/Acudientes/Delete/" + cl + "'>Eliminar</a>";
+                        jQuery("#grid").setRowData(ids[i], { act: be + se + ce })
+                    }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TipoDocumento.Descripcion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Documento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrimerApellido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SegundoApellido)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Correo)
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" }) |
-            @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-        </td>
-    </tr>
+                },
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    id: "0"
+                },
+                shrinkToFit: false,
+                autowidth: true,
+                multiselect: false
+            }).navGrid("#pager", {
+                edit: false, add: false, del: false, searchtext: "Buscar acudientes"
+            },
+            {}, {}, {},
+            {
+                zIndex: 100,
+                caption: "Buscar acudientes",
+                sopt: ['cn']
+            });;
+        });
+    </script>
 }
-
-</table>

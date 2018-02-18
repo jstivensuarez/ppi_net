@@ -141,5 +141,45 @@ namespace Samy.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpGet]
+        public JsonResult ListarRelaciones(string sidx, string sord, int page, int rows)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Relacion> relaciones = new List<Relacion>();
+            if (sord.ToUpper() == "DESC")
+            {
+                relaciones = db.Relacions.
+                      OrderByDescending(c => c.Descripcion).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                relaciones = db.Relacions.
+                     OrderBy(c => c.Descripcion).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            int totalRecords = db.Relacions.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = relaciones.Select(r => new {
+                    Id=r.Id,
+                    Descripcion=r.Descripcion
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
     }
 }

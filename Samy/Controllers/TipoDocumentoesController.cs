@@ -141,5 +141,45 @@ namespace Samy.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpGet]
+        public JsonResult ListarTiposDocumentos(string sidx, string sord, int page, int rows)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<TipoDocumento> tipo = new List<TipoDocumento>();
+            if (sord.ToUpper() == "DESC")
+            {
+                tipo = db.TipoDocumentos.
+                      OrderByDescending(c => c.Descripcion).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                tipo = db.TipoDocumentos.
+                     OrderBy(c => c.Descripcion).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            int totalRecords = db.TipoDocumentos.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = tipo.Select(r => new {
+                    Id = r.Id,
+                    Descripcion = r.Descripcion
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
     }
 }

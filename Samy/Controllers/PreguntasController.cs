@@ -156,5 +156,47 @@ namespace Samy.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpGet]
+        public JsonResult ListarPreguntas(string sidx, string sord, int page, int rows)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Pregunta> preguntas = new List<Pregunta>();
+            if (sord.ToUpper() == "DESC")
+            {
+                preguntas = db.Preguntas.
+                      OrderByDescending(c => c.Descripcion).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                preguntas = db.Preguntas.
+                     OrderBy(c => c.Descripcion).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            int totalRecords = db.Preguntas.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = preguntas.Select(p => new
+                {
+                    Id = p.Id,
+                    Descripcion = p.Descripcion
+                })
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

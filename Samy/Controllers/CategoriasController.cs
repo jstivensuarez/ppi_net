@@ -17,7 +17,7 @@ namespace Samy.Controllers
         // GET: Categorias
         public ActionResult Index()
         {
-            return View(db.Categorias.OrderBy(c=>c.Descripcion).ToList());
+            return View(db.Categorias.OrderBy(c => c.Descripcion).ToList());
         }
 
         // GET: Categorias/Details/5
@@ -142,6 +142,43 @@ namespace Samy.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [HttpGet]
+        public JsonResult ListarCategorias(string sidx, string sord, int page, int rows)
+        {
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+
+            List<Categoria> categorias = new List<Categoria>();
+            if (sord.ToUpper() == "DESC")
+            {
+                categorias = db.Categorias.
+                      OrderByDescending(c => c.Descripcion).
+                      Skip(pageIndex * pageSize).
+                    Take(pageSize).ToList();
+            }
+            else
+            {
+                categorias = db.Categorias.
+                     OrderBy(c => c.Descripcion).
+                     Skip(pageIndex * pageSize).
+                  Take(pageSize).ToList();
+            }
+
+            int totalRecords = db.Categorias.Count();
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            var jsonR = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = categorias
+            };
+
+            return Json(jsonR, JsonRequestBehavior.AllowGet);
         }
     }
 }
