@@ -22,9 +22,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Alumno.Nombre)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alumno.Nota)
-            </th>
             <th></th>
         </tr>
 
@@ -42,9 +39,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nota)
                 </td>
                 <td>
                     @Html.ActionLink("Calificar", "CalificarAlumno", new { id = item.Id,e=Model.Id }, new { @class = "btn btn-info" })

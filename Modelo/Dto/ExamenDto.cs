@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin;
+using Owin;
+using Samy.Models;
 
 namespace Modelo.Dto
 {
@@ -26,6 +28,9 @@ namespace Modelo.Dto
         [NotMapped]
         public List<Alumno> Alumnos { get; set; }
 
+        [NotMapped]
+        public List<ExamenPregunta> ExamenPreguntas { get; set; }
+        
         public List<int> AlumnosSelected { get; set; }
 
         [NotMapped]
@@ -34,7 +39,7 @@ namespace Modelo.Dto
         public List<int> PreguntasSelected { get; set; }
 
         [NotMapped]
-        public List<Usuario> Usuarios { get; set; }
+        public List<ApplicationUser> Usuarios { get; set; }
 
         public List<int> UsuariosSelected { get; set; }
 
@@ -44,8 +49,12 @@ namespace Modelo.Dto
         [NotMapped]
         public Pregunta Pregunta { get; set; }
 
+
         [NotMapped]
-        public bool terminado { get; set; }
+        public Pregunta Examen { get; set; }
+
+        [NotMapped]
+        public bool Calificado { get; set; }
 
     }
 }

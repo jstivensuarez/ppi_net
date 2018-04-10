@@ -18,17 +18,17 @@ namespace Samy.Controllers
                          select new ExamenDto
                          {
                              Alumnos = (from p in db.Alumnos
-                                        join h in db.ExamenAlumnos
+                                        join h in db.ExamenPregunta
                                         on p.Id equals h.AlumnoId
                                         where h.ExamenId == ex.Id
                                         select p
                                           ).ToList(),
-                             Usuarios = (from p in db.Usuarios
-                                         join h in db.ExamenUsuarios
-                                         on p.Id equals h.UsuarioId
-                                         where h.ExamenId == ex.Id
-                                         select p
-                                          ).ToList(),
+                             //Usuarios = (from p in db.Usuarios
+                             //            join h in db.ExamenUsuarios
+                             //            on p.Id equals h.ApplicationUserID
+                             //            where h.ExamenId == ex.Id
+                             //            select p
+                             //             ).ToList(),
                              Preguntas = (from p in db.Preguntas
                                           join h in db.ExamenPregunta
                                           on p.Id equals h.PreguntaId
@@ -38,7 +38,7 @@ namespace Samy.Controllers
                              Id = ex.Id,
                              Descripcion = ex.Descripcion,
                              FechaExamen = ex.FechaExamen,
-                             terminado = ex.Calificado
+                             Calificado = ex.Calificado
                          }).ToList().Distinct();
             return View(lista.OrderBy(e => e.Descripcion).ToList());
         }
@@ -46,118 +46,90 @@ namespace Samy.Controllers
         // GET: Examen/Details/5
         public ActionResult Details(int id)
         {
-
-            ExamenDto dto = (from ex in db.Examens
-                             where ex.Id == id
-                             select new ExamenDto
-                             {
-                                 Id = ex.Id,
-                                 Descripcion = ex.Descripcion,
-                                 FechaExamen = ex.FechaExamen,
-                                 terminado = ex.Calificado,
-                                 Usuarios = (from p in db.Usuarios
-                                             join h in db.ExamenUsuarios
-                                             on p.Id equals h.UsuarioId
-                                             where h.ExamenId == ex.Id
-                                             select p
-                                          ).ToList(),
-                                 Alumnos = (from p in db.Alumnos
-                                            join h in db.ExamenAlumnos
-                                            on p.Id equals h.AlumnoId
-                                            where h.ExamenId == ex.Id
-                                            select p
-                                          ).ToList(),
-                                 Preguntas = (from p in db.Preguntas
-                                              join h in db.ExamenPregunta
-                                              on p.Id equals h.PreguntaId
-                                              where h.ExamenId == ex.Id
-                                              select p
-                                          ).ToList(),
-                             }
-                              ).SingleOrDefault();
-            foreach (var item in dto.Alumnos)
+            var examen = db.Examens.Find(id);
+            ExamenDto dto = new ExamenDto
             {
-                var examenAl = db.ExamenAlumnos.Where(exa => exa.ExamenId ==
-         dto.Id && exa.AlumnoId == item.Id)
-              .SingleOrDefault();
-                item.Nota = examenAl.Nota;
-            }
+                Descripcion = examen.Descripcion,
+                Id = examen.Id,
+                FechaExamen = examen.FechaExamen,
+                Calificado = examen.Calificado,
+                //Usuarios = (from p in db.Usuarios
+                //            join h in db.ExamenUsuarios
+                //            on p.Id equals h.ApplicationUserID
+                //            where h.ExamenId == examen.Id
+                //            select p).ToList(),
+                ExamenPreguntas = (from p in db.ExamenPregunta
+                                   where p.ExamenId == examen.Id
+                                   select p).ToList()
+            };
+            dto.Alumnos = (from aux in dto.ExamenPreguntas
+                           select aux.Alumno).Distinct().ToList();
+            dto.Preguntas = (from aux in dto.ExamenPreguntas
+                             select aux.Pregunta).Distinct().ToList();
             return View(dto);
         }
 
         public ActionResult Calificar(int id)
         {
 
-            ExamenDto dto = (from ex in db.Examens
-                             where ex.Id == id
-                             select new ExamenDto
-                             {
-                                 Id = ex.Id,
-                                 Descripcion = ex.Descripcion,
-                                 FechaExamen = ex.FechaExamen,
-                                 Usuarios = (from p in db.Usuarios
-                                             join h in db.ExamenUsuarios
-                                             on p.Id equals h.UsuarioId
-                                             where h.ExamenId == ex.Id
-                                             select p
-                                          ).ToList(),
-                                 Alumnos = (from p in db.Alumnos
-                                            join h in db.ExamenAlumnos
-                                            on p.Id equals h.AlumnoId
-                                            where h.ExamenId == ex.Id
-                                            select p
-                                          ).ToList(),
-                                 Preguntas = (from p in db.Preguntas
-                                              join h in db.ExamenPregunta
-                                              on p.Id equals h.PreguntaId
-                                              where h.ExamenId == ex.Id
-                                              select p
-                                          ).ToList(),
-                             }
-                              ).SingleOrDefault();
-            foreach (var item in dto.Alumnos)
+            var examen = db.Examens.Find(id);
+            ExamenDto dto = new ExamenDto
             {
-                var examenAl = db.ExamenAlumnos.Where(exa => exa.ExamenId ==
-         dto.Id && exa.AlumnoId == item.Id)
-              .SingleOrDefault();
-                item.Nota = examenAl.Nota;
-            }
+                Descripcion = examen.Descripcion,
+                Id = examen.Id,
+                FechaExamen = examen.FechaExamen,
+                Calificado = examen.Calificado,
+                //Usuarios = (from p in db.Usuarios
+                //            join h in db.ExamenUsuarios
+                //            on p.Id equals h.ApplicationUserID
+                //            where h.ExamenId == examen.Id
+                //            select p).ToList(),
+                ExamenPreguntas = (from p in db.ExamenPregunta
+                                   where p.ExamenId == examen.Id
+                                   select p).ToList()
+            };
+            dto.Alumnos = (from aux in dto.ExamenPreguntas
+                           select aux.Alumno).Distinct().ToList();
+            dto.Preguntas = (from aux in dto.ExamenPreguntas
+                             select aux.Pregunta).Distinct().ToList();
+
             return View(dto);
         }
 
         public ActionResult CalificarAlumno(int id, int e)
         {
-            ExamenDto dto = (from ex in db.Examens
-                             where ex.Id == e
-                             select new ExamenDto
-                             {
-                                 Id = ex.Id,
-                                 Descripcion = ex.Descripcion,
-                                 FechaExamen = ex.FechaExamen,
-                                 Usuarios = (from p in db.Usuarios
-                                             join h in db.ExamenUsuarios
-                                             on p.Id equals h.UsuarioId
-                                             where h.ExamenId == ex.Id
-                                             && p.Id == id
-                                             select p
-                                          ).ToList(),
-                                 Alumno = (from p in db.Alumnos
-                                           where p.Id == id
-                                           select p
-                                          ).FirstOrDefault(),
-                                 Preguntas = (from p in db.Preguntas
-                                              join h in db.ExamenPregunta
-                                              on p.Id equals h.PreguntaId
-                                              where h.ExamenId == ex.Id
-                                              select p
-                                          ).ToList(),
-                             }
-                             ).SingleOrDefault();
-            var examenAl = db.ExamenAlumnos.Where(exa => exa.ExamenId ==
-           dto.Id && exa.AlumnoId == id)
-                .SingleOrDefault();
-            Session["nota"] = examenAl.Id;
-            dto.Alumno.Nota = examenAl.Nota;
+            var examen = db.Examens.Find(e);
+
+            ExamenDto dto = new ExamenDto
+            {
+                Descripcion = examen.Descripcion,
+                Id = examen.Id,
+                FechaExamen = examen.FechaExamen,
+                Calificado = examen.Calificado,
+                //Usuarios = (from p in db.Usuarios
+                //            join h in db.ExamenUsuarios
+                //            on p.Id equals h.ApplicationUserID
+                //            where h.ExamenId == examen.Id
+                //            select p).ToList(),
+                ExamenPreguntas = (from p in db.ExamenPregunta
+                                   where p.ExamenId == examen.Id
+                                   && p.AlumnoId == id
+                                   select p).ToList()
+            };
+            dto.Alumno = db.Alumnos.Find(id);
+            dto.Alumnos = (from aux in dto.ExamenPreguntas
+                           select aux.Alumno).Distinct().ToList();
+            dto.Preguntas = (from aux in dto.ExamenPreguntas
+                             select aux.Pregunta).Distinct().ToList();
+
+            foreach (var item in dto.Preguntas)
+            {
+                item.Nota = dto.ExamenPreguntas.Where(ep => ep.ExamenId == e
+                                                && ep.PreguntaId == item.Id)
+                                                .SingleOrDefault().Nota;
+            }
+            Session["idExamen"] = e;
+            Session["idAlumno"] = id;
             return View(dto);
         }
 
@@ -168,7 +140,7 @@ namespace Samy.Controllers
             try
             {
                 var e = db.Examens.Find(examen.Id);
-                int numDes = db.ExamenAlumnos.Where(et => et.ExamenId == examen.Id && et.Nota == 0)
+                int numDes = db.ExamenPregunta.Where(et => et.ExamenId == examen.Id && et.Nota == 0)
                     .Count();
                 if (numDes == 0)
                 {
@@ -179,40 +151,26 @@ namespace Samy.Controllers
                 else
                 {
                     ViewBag.mensaje = "Todos los alumnos deben tener una calificación";
-                    ExamenDto dto = (from ex in db.Examens
-                                     where ex.Id == examen.Id
-                                     select new ExamenDto
-                                     {
-                                         Id = ex.Id,
-                                         Descripcion = ex.Descripcion,
-                                         FechaExamen = ex.FechaExamen,
-                                         Usuarios = (from p in db.Usuarios
-                                                     join h in db.ExamenUsuarios
-                                                     on p.Id equals h.UsuarioId
-                                                     where h.ExamenId == ex.Id
-                                                     select p
-                                                  ).ToList(),
-                                         Alumnos = (from p in db.Alumnos
-                                                    join h in db.ExamenAlumnos
-                                                    on p.Id equals h.AlumnoId
-                                                    where h.ExamenId == ex.Id
-                                                    select p
-                                                  ).ToList(),
-                                         Preguntas = (from p in db.Preguntas
-                                                      join h in db.ExamenPregunta
-                                                      on p.Id equals h.PreguntaId
-                                                      where h.ExamenId == ex.Id
-                                                      select p
-                                                  ).ToList(),
-                                     }
-                              ).SingleOrDefault();
-                    foreach (var item in dto.Alumnos)
+                    var ex = db.Examens.Find(examen.Id);
+                    ExamenDto dto = new ExamenDto
                     {
-                        var examenAl = db.ExamenAlumnos.Where(exa => exa.ExamenId ==
-                 dto.Id && exa.AlumnoId == item.Id)
-                      .SingleOrDefault();
-                        item.Nota = examenAl.Nota;
-                    }
+                        Descripcion = ex.Descripcion,
+                        Id = ex.Id,
+                        FechaExamen = ex.FechaExamen,
+                        Calificado = ex.Calificado,
+                        //Usuarios = (from p in db.Usuarios
+                        //            join h in db.ExamenUsuarios
+                        //            on p.Id equals h.ApplicationUserID
+                        //            where h.ExamenId == examen.Id
+                        //            select p).ToList(),
+                        ExamenPreguntas = (from p in db.ExamenPregunta
+                                           where p.ExamenId == ex.Id
+                                           select p).ToList()
+                    };
+                    dto.Alumnos = (from aux in dto.ExamenPreguntas
+                                   select aux.Alumno).ToList();
+                    dto.Preguntas = (from aux in dto.ExamenPreguntas
+                                     select aux.Pregunta).Distinct().ToList();
                     return View(dto);
                 }
 
@@ -225,48 +183,42 @@ namespace Samy.Controllers
 
         }
 
-        public ActionResult CalificarPregunta(int? nota)
+        [HttpPost]
+        public ActionResult CalificarPregunta(Pregunta[] preguntas)
         {
-
-            int id = (int)Session["nota"];
-            var exAl = db.ExamenAlumnos.Find(id);
-            exAl.Nota = (int)nota;
-            db.SaveChanges();
-
-            ExamenDto dto = (from ex in db.Examens
-                             where ex.Id == exAl.ExamenId
-                             select new ExamenDto
-                             {
-                                 Id = ex.Id,
-                                 Descripcion = ex.Descripcion,
-                                 FechaExamen = ex.FechaExamen,
-                                 Usuarios = (from p in db.Usuarios
-                                             join h in db.ExamenUsuarios
-                                             on p.Id equals h.UsuarioId
-                                             where h.ExamenId == ex.Id
-                                             select p
-                                          ).ToList(),
-                                 Alumnos = (from p in db.Alumnos
-                                            join h in db.ExamenAlumnos
-                                            on p.Id equals h.AlumnoId
-                                            where h.ExamenId == ex.Id
-                                            select p
-                                          ).ToList(),
-                                 Preguntas = (from p in db.Preguntas
-                                              join h in db.ExamenPregunta
-                                              on p.Id equals h.PreguntaId
-                                              where h.ExamenId == ex.Id
-                                              select p
-                                          ).ToList(),
-                             }
-                             ).SingleOrDefault();
-            foreach (var item in dto.Alumnos)
+            int idExamen = (Int32)Session["idExamen"];
+            int idAlumno = (Int32)Session["idAlumno"];
+            Session.Remove("idExamen");
+            Session.Remove("idAlumno");
+            foreach (var item in preguntas)
             {
-                var examenAl = db.ExamenAlumnos.Where(exa => exa.ExamenId ==
-         dto.Id && exa.AlumnoId == item.Id)
-              .SingleOrDefault();
-                item.Nota = examenAl.Nota;
+                db.ExamenPregunta.Where(ep => ep.AlumnoId == idAlumno
+                                && ep.ExamenId == idExamen
+                                && ep.PreguntaId == item.Id)
+                                .SingleOrDefault().Nota = item.Nota;
             }
+            db.SaveChanges();
+            var examen = db.Examens.Find(idExamen);
+            ExamenDto dto = new ExamenDto
+            {
+                Descripcion = examen.Descripcion,
+                Id = examen.Id,
+                FechaExamen = examen.FechaExamen,
+                Calificado = examen.Calificado,
+                //Usuarios = (from p in db.Usuarios
+                //            join h in db.ExamenUsuarios
+                //            on p.Id equals h.ApplicationUserID
+                //            where h.ExamenId == examen.Id
+                //            select p).ToList(),
+                ExamenPreguntas = (from p in db.ExamenPregunta
+                                   where p.ExamenId == examen.Id
+                                   select p).ToList()
+            };
+            dto.Alumnos = (from aux in dto.ExamenPreguntas
+                           select aux.Alumno).Distinct().ToList();
+            dto.Preguntas = (from aux in dto.ExamenPreguntas
+                             select aux.Pregunta).Distinct().ToList();
+
             return View("Calificar", dto);
         }
 
@@ -274,7 +226,7 @@ namespace Samy.Controllers
         public ActionResult Create()
         {
             var lista = new ExamenDto();
-            lista.Usuarios = db.Usuarios.ToList();
+            //lista.Usuarios = db.Usuarios.ToList();
             lista.Alumnos = db.Alumnos.ToList();
             lista.Preguntas = db.Preguntas.ToList();
             lista.FechaExamen = new DateTime();
@@ -299,22 +251,22 @@ namespace Samy.Controllers
 
                 var preguntas = db.Preguntas.ToList();
                 var alumnos = db.Alumnos.ToList();
-                var usuarios = db.Usuarios.ToList();
+                //var usuarios = db.Usuarios.ToList();
 
                 foreach (var item in examen.AlumnosSelected != null ? examen.AlumnosSelected : new List<int>())
                 {
                     alumnos.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
                 }
-                foreach (var item in examen.UsuariosSelected != null ? examen.UsuariosSelected : new List<int>())
-                {
-                    usuarios.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
-                }
+                //foreach (var item in examen.UsuariosSelected != null ? examen.UsuariosSelected : new List<int>())
+                //{
+                //    usuarios.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
+                //}
                 foreach (var item in examen.PreguntasSelected != null ? examen.PreguntasSelected : new List<int>())
                 {
                     preguntas.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
                 }
                 examen.Alumnos = alumnos;
-                examen.Usuarios = usuarios;
+                //examen.Usuarios = usuarios;
                 examen.Preguntas = preguntas;
                 List<Examen> examenes = db.Examens.ToList();
                 if (examen.AlumnosSelected == null)
@@ -354,24 +306,20 @@ namespace Samy.Controllers
                     db.ExamenUsuarios.Add(new ExamenUsuario
                     {
                         ExamenId = ex.Id,
-                        UsuarioId = item
+                        ApplicationUserID = item
                     });
                 }
-                foreach (var item in examen.AlumnosSelected)
+                for (int i = 0; i < examen.PreguntasSelected.Count; i++)
                 {
-                    db.ExamenAlumnos.Add(new ExamenAlumno
+                    for (int j = 0; j < examen.PreguntasSelected.Count; j++)
                     {
-                        ExamenId = ex.Id,
-                        AlumnoId = item
-                    });
-                }
-                foreach (var item in examen.PreguntasSelected)
-                {
-                    db.ExamenPregunta.Add(new ExamenPregunta
-                    {
-                        ExamenId = ex.Id,
-                        PreguntaId = item
-                    });
+                        db.ExamenPregunta.Add(new ExamenPregunta
+                        {
+                            ExamenId = ex.Id,
+                            AlumnoId = examen.AlumnosSelected[j],
+                            PreguntaId = examen.PreguntasSelected[i]
+                        });
+                    }
                 }
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -386,50 +334,43 @@ namespace Samy.Controllers
         // GET: Examen/Edit/5
         public ActionResult Edit(int id)
         {
-            ExamenDto dto = (from ex in db.Examens
-                             where ex.Id == id
-                             select new ExamenDto
-                             {
-                                 Id = ex.Id,
-                                 Descripcion = ex.Descripcion,
-                                 FechaExamen = ex.FechaExamen,
-                                 Alumnos = (from p in db.Alumnos
-                                            join h in db.ExamenAlumnos
-                                            on p.Id equals h.AlumnoId
-                                            where h.ExamenId == ex.Id
-                                            select p
-                                          ).ToList(),
-                                 Usuarios = (from p in db.Usuarios
-                                             join h in db.ExamenUsuarios
-                                             on p.Id equals h.UsuarioId
-                                             where h.ExamenId == ex.Id
-                                             select p
-                                          ).ToList(),
-                                 Preguntas = (from p in db.Preguntas
-                                              join h in db.ExamenPregunta
-                                              on p.Id equals h.PreguntaId
-                                              where h.ExamenId == ex.Id
-                                              select p
-                                          ).ToList(),
-                             }
-                            ).SingleOrDefault();
+            var examen = db.Examens.Find(id);
+            ExamenDto dto = new ExamenDto
+            {
+                Descripcion = examen.Descripcion,
+                Id = examen.Id,
+                FechaExamen = examen.FechaExamen,
+                Calificado = examen.Calificado,
+                //Usuarios = (from p in db.Usuarios
+                //            join h in db.ExamenUsuarios
+                //            on p.Id equals h.ApplicationUserID
+                //            where h.ExamenId == examen.Id
+                //            select p).ToList(),
+                ExamenPreguntas = (from p in db.ExamenPregunta
+                                   where p.ExamenId == examen.Id
+                                   select p).ToList()
+            };
+            dto.Alumnos = (from aux in dto.ExamenPreguntas
+                           select aux.Alumno).Distinct().ToList();
+            dto.Preguntas = (from aux in dto.ExamenPreguntas
+                             select aux.Pregunta).Distinct().ToList();
             List<Pregunta> preguntas = db.Preguntas.ToList();
             List<Alumno> alumnos = db.Alumnos.ToList();
-            List<Usuario> usuarios = db.Usuarios.ToList();
+            //List<Usuario> usuarios = db.Usuarios.ToList();
             foreach (var item in dto.Alumnos)
             {
                 alumnos.Where(p => p.Id == item.Id).SingleOrDefault().IsChecked = true;
             }
             foreach (var item in dto.Usuarios)
             {
-                usuarios.Where(p => p.Id == item.Id).SingleOrDefault().IsChecked = true;
+                //usuarios.Where(p => p.Id == item.Id).SingleOrDefault().IsChecked = true;
             }
             foreach (var item in dto.Preguntas)
             {
                 preguntas.Where(p => p.Id == item.Id).SingleOrDefault().IsChecked = true;
             }
             dto.Alumnos = alumnos;
-            dto.Usuarios = usuarios;
+            //dto.Usuarios = usuarios;
             dto.Preguntas = preguntas;
             dto.FechaExamenAux = dto.FechaExamen;
             return View(dto);
@@ -446,7 +387,7 @@ namespace Samy.Controllers
             }
             var preguntas = db.Preguntas.ToList();
             var alumnos = db.Alumnos.ToList();
-            var usuarios = db.Usuarios.ToList();
+            //var usuarios = db.Usuarios.ToList();
 
             foreach (var item in examen.AlumnosSelected != null ? examen.AlumnosSelected : new List<int>())
             {
@@ -454,14 +395,14 @@ namespace Samy.Controllers
             }
             foreach (var item in examen.UsuariosSelected != null ? examen.UsuariosSelected : new List<int>())
             {
-                usuarios.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
+                //usuarios.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
             }
             foreach (var item in examen.PreguntasSelected != null ? examen.PreguntasSelected : new List<int>())
             {
                 preguntas.Where(p => p.Id == item).SingleOrDefault().IsChecked = true;
             }
             examen.Alumnos = alumnos;
-            examen.Usuarios = usuarios;
+            //examen.Usuarios = usuarios;
             examen.Preguntas = preguntas;
             if (examen.AlumnosSelected == null)
             {
@@ -492,7 +433,7 @@ namespace Samy.Controllers
                 ex.FechaExamen = examen.FechaExamen;
                 db.SaveChanges();
                 var ExamenPreguntas = db.ExamenPregunta.Where(e => e.ExamenId == ex.Id).ToList();
-                var ExamenAlumnos = db.ExamenAlumnos.Where(e => e.ExamenId == ex.Id).ToList();
+                var ExamenAlumnos = db.ExamenPregunta.Where(e => e.ExamenId == ex.Id).ToList();
                 var ExamenUsuarios = db.ExamenUsuarios.Where(e => e.ExamenId == ex.Id).ToList();
                 foreach (var item in ExamenPreguntas)
                 {
@@ -500,37 +441,35 @@ namespace Samy.Controllers
                 }
                 foreach (var item in ExamenAlumnos)
                 {
-                    db.ExamenAlumnos.Remove(item);
+                    db.ExamenPregunta.Remove(item);
                 }
                 foreach (var item in ExamenUsuarios)
                 {
                     db.ExamenUsuarios.Remove(item);
                 }
                 db.SaveChanges();
-                foreach (var item in examen.AlumnosSelected)
-                {
-                    db.ExamenAlumnos.Add(new ExamenAlumno
-                    {
-                        ExamenId = ex.Id,
-                        AlumnoId = item
-                    });
-                }
                 foreach (var item in examen.UsuariosSelected)
                 {
                     db.ExamenUsuarios.Add(new ExamenUsuario
                     {
                         ExamenId = ex.Id,
-                        UsuarioId = item
+                        ApplicationUserID = item
                     });
                 }
-                foreach (var item in examen.PreguntasSelected)
+
+                for (int i = 0; i < examen.PreguntasSelected.Count; i++)
                 {
-                    db.ExamenPregunta.Add(new ExamenPregunta
+                    for (int j = 0; j < examen.AlumnosSelected.Count; j++)
                     {
-                        ExamenId = ex.Id,
-                        PreguntaId = item
-                    });
+                        db.ExamenPregunta.Add(new ExamenPregunta
+                        {
+                            ExamenId = ex.Id,
+                            AlumnoId = examen.AlumnosSelected[j],
+                            PreguntaId = examen.PreguntasSelected[i]
+                        });
+                    }
                 }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -586,27 +525,31 @@ namespace Samy.Controllers
                             select new ExamenDto
                             {
                                 Alumnos = (from p in db.Alumnos
-                                           join h in db.ExamenAlumnos
+                                           join h in db.ExamenPregunta
                                            on p.Id equals h.AlumnoId
                                            where h.ExamenId == ex.Id
                                            select p
                                              ).ToList(),
-                                Usuarios = (from p in db.Usuarios
-                                            join h in db.ExamenUsuarios
-                                            on p.Id equals h.UsuarioId
-                                            where h.ExamenId == ex.Id
-                                            select p
-                                             ).ToList(),
+                                //Usuarios = (from p in db.Usuarios
+                                //            join h in db.ExamenUsuarios
+                                //            on p.Id equals h.ApplicationUserID
+                                //            where h.ExamenId == ex.Id
+                                //            select p
+                                //             ).ToList(),
                                 Preguntas = (from p in db.Preguntas
                                              join h in db.ExamenPregunta
                                              on p.Id equals h.PreguntaId
                                              where h.ExamenId == ex.Id
                                              select p
                                              ).ToList(),
+                                ExamenPreguntas = (from p in db.ExamenPregunta
+                                                   where p.ExamenId == ex.Id
+                                                   select p
+                                          ).ToList(),
                                 Id = ex.Id,
                                 Descripcion = ex.Descripcion,
                                 FechaExamen = ex.FechaExamen,
-                                terminado = ex.Calificado
+                                Calificado = ex.Calificado
                             }).OrderByDescending(e => e.Descripcion).ToList().Distinct();
             }
             else
@@ -615,27 +558,31 @@ namespace Samy.Controllers
                             select new ExamenDto
                             {
                                 Alumnos = (from p in db.Alumnos
-                                           join h in db.ExamenAlumnos
+                                           join h in db.ExamenPregunta
                                            on p.Id equals h.AlumnoId
                                            where h.ExamenId == ex.Id
                                            select p
                                              ).ToList(),
-                                Usuarios = (from p in db.Usuarios
-                                            join h in db.ExamenUsuarios
-                                            on p.Id equals h.UsuarioId
-                                            where h.ExamenId == ex.Id
-                                            select p
-                                             ).ToList(),
+                                //Usuarios = (from p in db.Usuarios
+                                //            join h in db.ExamenUsuarios
+                                //            on p.Id equals h.ApplicationUserID
+                                //            where h.ExamenId == ex.Id
+                                //            select p
+                                //             ).ToList(),
                                 Preguntas = (from p in db.Preguntas
                                              join h in db.ExamenPregunta
                                              on p.Id equals h.PreguntaId
                                              where h.ExamenId == ex.Id
                                              select p
                                              ).ToList(),
+                                ExamenPreguntas = (from p in db.ExamenPregunta
+                                                   where p.ExamenId == ex.Id
+                                                   select p
+                                          ).ToList(),
                                 Id = ex.Id,
                                 Descripcion = ex.Descripcion,
                                 FechaExamen = ex.FechaExamen,
-                                terminado = ex.Calificado
+                                Calificado = ex.Calificado
                             }).OrderBy(e => e.Descripcion).ToList().Distinct();
             }
 
@@ -651,7 +598,8 @@ namespace Samy.Controllers
                 {
                     e.Id,
                     e.Descripcion,
-                    e.FechaExamen
+                    e.FechaExamen,
+                    e.Calificado
                 })
             };
 

@@ -28,12 +28,13 @@
                 url: "/Examen/ListarExamenes",
                 datatype: "json",
                 mtype: "Get",
-                colNames: ["Id", "Descripción", "Fecha", "Acción"],
+                colNames: ["Id", "Calificado", "Descripción", "Fecha", "Acción"],
                 colModel: [
                     { key: true, hidden: true, name: "Id", index: "Id" },
+                    { key: false, name: "Calificado", index: "FechaExamen", editable: false, hidden: true },
                     { key: false, name: "Descripcion", width: 500, index: "Descripcion", editable: false },
-                      { key: false, name: "FechaExamen",width: 200, index: "FechaExamen", editable: false, formatter: "date", formatoptions: {newformat:"d/m/y"}},
-                      { name: 'act', index: 'act', width: 500, sortable: false, search: false }
+                    { key: false, name: "FechaExamen", width: 200, index: "FechaExamen", editable: false, formatter: "date", formatoptions: { newformat: "d/m/y" } },
+                    { name: 'act', index: 'act', width: 500, sortable: false, search: false }
 
                 ],
                 pager: $("#pager"),
@@ -44,13 +45,20 @@
                 caption: "Examenes",
                 emptyrecords: "No hay examenes",
                 gridComplete: function () {
+                    debugger;
                     var ids = jQuery("#grid").getDataIDs();
                     for (var i = 0; i < ids.length; i++) {
                         var cl = ids[i];
                         debugger;
-                        be = "<a class='btn btn-warning  btn-sm' href='/Examen/Edit/" + cl + "'>Editar</a> |";
+                        if ($("#grid").getRowData(cl).Calificado) {
+                            be = "<a class='btn btn-warning disabled btn-sm' href='/Examen/Edit/" + cl + "'>Editar</a> |";
+                            ce = "<a class='btn btn-danger  disabled btn-sm' href='/Examen/Delete/" + cl + "'>Eliminar</a>";
+                        } else {
+                            ce = "<a class='btn btn-danger  btn-sm' href='/Examen/Delete/" + cl + "'>Eliminar</a>";
+                            be = "<a class='btn btn-warning  btn-sm' href='/Examen/Edit/" + cl + "'>Editar</a> |";
+                        }
+
                         se = "<a class='btn btn-info  btn-sm' href='/Examen/Details/" + cl + "'>Detalles</a> |";
-                        ce = "<a class='btn btn-danger  btn-sm' href='/Examen/Delete/" + cl + "'>Eliminar</a>";
                         jQuery("#grid").setRowData(ids[i], { act: be + se + ce })
                     }
 

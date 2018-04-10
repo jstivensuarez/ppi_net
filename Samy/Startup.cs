@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
 using Samy.Models;
+using System.Linq;
 
 [assembly: OwinStartupAttribute(typeof(Samy.Startup))]
 namespace Samy
@@ -18,12 +19,13 @@ namespace Samy
         private void createRolesandUsers()
         {
             ApplicationDbContext context = new ApplicationDbContext();
-
+            
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
   
-            if (!roleManager.RoleExists("administrador"))
+            if (!roleManager.RoleExists("administradorr"))
             {
+                var cat = context.Categorias.ToList();
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "administrador";
                 roleManager.Create(role);
@@ -35,7 +37,7 @@ namespace Samy
                 string userPWD = "diosestodo00";
 
                 var chkUser = UserManager.Create(user, userPWD);
-
+                
                 if (chkUser.Succeeded)
                 {
                     var result1 = UserManager.AddToRole(user.Id, "administrador");

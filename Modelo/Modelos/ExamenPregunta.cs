@@ -16,7 +16,13 @@ namespace Modelo.Modelos
 
         public int PreguntaId { get; set; }
 
+        public int AlumnoId { get; set; }
+
+        public int Nota { get; set; }
+
         public virtual Pregunta Pregunta { get; set; }
+
+        public virtual Alumno Alumno { get; set; }
 
         public virtual Examen Examen { get; set; }
     }

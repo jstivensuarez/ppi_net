@@ -4,8 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-
-
 <h2>Tipos de documentos</h2>
 <p>
     @Html.ActionLink("Crear", "Create")
@@ -21,7 +19,6 @@
     <script src="~/Scripts/jquery-1.10.2.js"></script>
     <script src="~/Scripts/i18n/grid.locale-es.js"></script>
     <script src="~/Scripts/jquery.jqGrid.js"></script>
-    <script src="~/Scripts/GridJs/TiposDocumentosJs.js"></script>
     <script>
         $(function () {
             debugger;
@@ -33,7 +30,7 @@
                 colModel: [
                     { key: true, hidden: true, name: "Id", index: "Id" },
                     { key: false, name: "Descripcion", index: "Descripcion", editable: false },
-                      { name: 'act', index: 'act', width: 75, sortable: false }
+                    { name: 'act', index: 'act', width: 75, sortable: false, search: false }
                 ],
                 pager: $("#pager"),
                 rowNum: 10,
@@ -43,6 +40,7 @@
                 caption: "Tipos de documentos",
                 emptyrecords: "No hay Tipos de documentos",
                 gridComplete: function () {
+                    debugger;
                     var ids = jQuery("#grid").getDataIDs();
                     for (var i = 0; i < ids.length; i++) {
                         var cl = ids[i];

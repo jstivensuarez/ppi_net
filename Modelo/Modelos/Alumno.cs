@@ -35,11 +35,6 @@ namespace Modelo.Modelos
         [NotMapped]
         public DateTime FechaNacimientoAux { get; set; }
 
-        [NotMapped]
-        [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [Range(0, 10, ErrorMessage = "La nota debe estar entre el rango (0 y 10)")]
-        public int Nota { get; set; }
-
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         [Display(Name = "Categoría")]
         public int CategoriaId { get; set; }
@@ -74,6 +69,15 @@ namespace Modelo.Modelos
         public virtual Sede Sede { get; set; }
 
         public virtual ICollection<AcudienteAlumno> AcudienteAlumnos { get; set; }
+
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                return Nombre+" "+PrimerApellido+" "+SegundoApellido;
+            }
+        }
 
     }
 }

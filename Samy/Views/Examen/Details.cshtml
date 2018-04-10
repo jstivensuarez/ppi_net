@@ -44,10 +44,6 @@
                     <th>
                         Nombre
                     </th>
-                    <th>
-                        Nota
-                    </th>
-                    <th></th>
                 </tr>
                 @foreach (var item in Model.Alumnos)
                 {
@@ -56,10 +52,7 @@
                             @Html.DisplayFor(modelItem => item.Documento)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Nombre)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nota)
+                            @Html.DisplayFor(modelItem => item.FullName)
                         </td>
                     </tr>
                 }
@@ -112,7 +105,7 @@
     </div>
 </div>
 <p>
-    @if (!Model.terminado)
+    @if (!Model.Calificado)
     {
         @Html.ActionLink("Editar", "Edit", new { id = Model.Id })
     }

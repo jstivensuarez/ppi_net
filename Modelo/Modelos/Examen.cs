@@ -29,6 +29,5 @@ namespace Modelo.Modelos
 
         public virtual ICollection<ExamenUsuario> ExamenUsuarios { get; set; }
 
-        public virtual ICollection<ExamenAlumno> ExamenAlumnos { get; set; }
     }
 }

@@ -1,42 +1,65 @@
 ﻿@model Modelo.Dto.ExamenDto
+@using System.Collections.Generic
+@{ 
 
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Pregunta.Descripcion)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model.Preguntas)
+    List<int> notas = new List<int>
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-        </tr>
-    }
-  
-</table>
-@using (Html.BeginForm("CalificarPregunta", "Examen", FormMethod.Get))
+        1,2,3,4,5
+    };
+    List<int> notasAux = new List<int>();
+}
+<br />
+<h3>@Model.Alumno.Nombre</h3>
+@using (Html.BeginForm("CalificarPregunta", "Examen", FormMethod.Post))
 {
-    <div class="form-group">
-        <label for="sel1">Nota</label>
-        <select class="form-control" id="nota" name="nota">
-            <option>0</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
-        </select>
-    </div>
-    @*<input name="nota" value="@Model.Alumno.Nota" type="text" />*@
+    @Html.HiddenFor(alumnos =>Model.Id)
+    <hr />
+    <table>
+        <thead>
+            <tr>
+                <td>Pregunta</td>
+                <td>Nota</td>
+            </tr>
+        </thead>
+        <tboy>
+            @for (int i = 0; i < Model.ExamenPreguntas.Count; i++)
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.ExamenPreguntas[i].Pregunta.Descripcion)
+                        @Html.HiddenFor(model => model.Preguntas[i].Id)
+                    </td>
+                    <td>
+                        <div>
+                            @if (Model.ExamenPreguntas[i].Pregunta.Nota == 0)
+                            {
+                                <select class="form-control" name='Preguntas[@i].Nota'>
+                                    <option>--------</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select class="form-control" name='Preguntas[@i].Nota'>
+                                    <option>@Model.Preguntas[i].Nota</option>
+                                    <option>--------</option>
+                                    @foreach(var item in notas.Where(x => x != Model.Preguntas[i].Nota))
+                                    {
+                                        <option>@item</option>
+                                    }
+                                </select>
+                            }
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tboy>
+    </table>
     <input type="submit" value="Calificar" class="btn btn-info" />
 }

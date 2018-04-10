@@ -21,6 +21,11 @@ namespace Modelo.Modelos
         [NotMapped]
         public bool IsChecked { get; set; }
 
+        [NotMapped]
+        [Required(ErrorMessage = "El campo {0} es obligatorio")]
+        [Range(0, 10, ErrorMessage = "La nota debe estar entre el rango (0 y 10)")]
+        public int Nota { get; set; }
+
         public Categoria Categoria { get; set; }
 
         public virtual ICollection<ExamenPregunta> ExamenPreguntas { get; set; }
