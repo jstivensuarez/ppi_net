@@ -30,7 +30,6 @@ namespace Modelo.Modelos
 
         [Display(Name = "Fecha de nacimiento")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
-        //[DataType(DataType.Date, ErrorMessage = "Error {0}")]
         public DateTime FechaNacimiento { get; set; }
         [NotMapped]
         public DateTime FechaNacimientoAux { get; set; }
@@ -59,9 +58,6 @@ namespace Modelo.Modelos
         [Display(Name = "Sede")]
         public int? SedeId { get; set; }
 
-        [NotMapped]
-        public bool IsChecked { get; set; }
-
         public virtual Categoria Categoria { get; set; }
 
         public virtual TipoDocumento TipoDocumento { get; set; }
@@ -69,6 +65,12 @@ namespace Modelo.Modelos
         public virtual Sede Sede { get; set; }
 
         public virtual ICollection<AcudienteAlumno> AcudienteAlumnos { get; set; }
+
+        [NotMapped]
+        public bool Calificado { get; set; }
+
+        [NotMapped]
+        public bool IsChecked { get; set; }
 
         [NotMapped]
         public string FullName

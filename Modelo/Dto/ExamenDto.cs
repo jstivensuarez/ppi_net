@@ -41,7 +41,7 @@ namespace Modelo.Dto
         [NotMapped]
         public List<ApplicationUser> Usuarios { get; set; }
 
-        public List<int> UsuariosSelected { get; set; }
+        public List<string> UsuariosSelected { get; set; }
 
         [NotMapped]
         public Alumno Alumno { get; set; }

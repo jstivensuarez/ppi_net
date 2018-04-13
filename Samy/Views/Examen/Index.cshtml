@@ -50,7 +50,7 @@
                     for (var i = 0; i < ids.length; i++) {
                         var cl = ids[i];
                         debugger;
-                        if ($("#grid").getRowData(cl).Calificado) {
+                        if ($("#grid").getRowData(cl).Calificado== "true") {
                             be = "<a class='btn btn-warning disabled btn-sm' href='/Examen/Edit/" + cl + "'>Editar</a> |";
                             ce = "<a class='btn btn-danger  disabled btn-sm' href='/Examen/Delete/" + cl + "'>Eliminar</a>";
                         } else {

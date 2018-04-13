@@ -15,7 +15,7 @@ namespace Modelo.Modelos
 
         public int ExamenId { get; set; }
 
-        public int ApplicationUserID { get; set; }
+        public string ApplicationUserID { get; set; }
 
         public Examen Examen { get; set; }
 

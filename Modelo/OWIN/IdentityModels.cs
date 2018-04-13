@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
 using Modelo.Modelos;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Samy.Models
 {
@@ -18,8 +19,9 @@ namespace Samy.Models
             // Add custom user claims here
             return userIdentity;
         }
-
-        public int ExamenUsuarioId { get; set; }
+        [NotMapped]
+        public bool IsChecked { get; set; }
+        //public int ExamenUsuarioId { get; set; }
         public virtual ICollection<ExamenUsuario> ExamenUsuarios { get; set; }
 
     }

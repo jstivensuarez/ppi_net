@@ -19,3 +19,4 @@ C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_
 C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\bin\Debug\Microsoft.AspNet.Identity.Core.xml
 C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\bin\Debug\Microsoft.Owin.xml
+C:\Users\stive\OneDrive\Documentos\Visual Studio 2015\Projects\Web\MVC\Samy\ppi_net\Modelo\obj\Debug\Modelo.csprojResolveAssemblyReference.cache
